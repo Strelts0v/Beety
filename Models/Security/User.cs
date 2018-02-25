@@ -20,6 +20,16 @@ namespace Models.Security
 
         public string Password { get; set; }
 
+        public string Login { get; set; }
+
+        public string Phone { get; set; }
+
+        public string Email { get; set; }
+
+        public DateTime? BirthDay { get; set; }
+
+        public string Photo { get; set; }
+
         [Required]
         public virtual RegistrationToken Token { get; set; }
 

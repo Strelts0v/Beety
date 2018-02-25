@@ -13,6 +13,9 @@ namespace DataAccess
         #region DbSets
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<Privator> Privators { get; set; }
+        public DbSet<Redactor> Redactors { get; set; }
 
         public DbSet<RegistrationToken> RegistrationTokens { get; set; }
         #endregion DbSets

@@ -12,9 +12,10 @@ using System;
 namespace DatabaseMigrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180219204053_AddUsersTables")]
+    partial class AddUsersTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +27,7 @@ namespace DatabaseMigrations.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("BossName");
 
                     b.Property<int?>("PersonalCount");
 
@@ -70,7 +71,7 @@ namespace DatabaseMigrations.Migrations
 
                     b.Property<long>("UserId");
 
-                    b.Property<int>("UserRole");
+                    b.Property<int>("UserType");
 
                     b.HasKey("Id");
 
@@ -115,8 +116,6 @@ namespace DatabaseMigrations.Migrations
                     b.Property<string>("RoleName")
                         .HasMaxLength(255);
 
-                    b.Property<int>("UserRole");
-
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -147,8 +146,6 @@ namespace DatabaseMigrations.Migrations
                         .HasMaxLength(40);
 
                     b.Property<string>("Login");
-
-                    b.Property<string>("Password");
 
                     b.Property<string>("PasswordSalt");
 
