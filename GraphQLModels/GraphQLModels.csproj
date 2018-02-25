@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Queries\RoleQuery\" />
+    <Compile Remove="Queries\RoleQuery\**" />
+    <EmbeddedResource Remove="Queries\RoleQuery\**" />
+    <None Remove="Queries\RoleQuery\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
