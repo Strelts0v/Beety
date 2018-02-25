@@ -2,14 +2,23 @@
 using GraphQL.Types;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using DataAccess.EntitiesRepositories;
 using GraphQLModels;
 using GraphQLModels.SecurityQuery;
+using Models.Security;
 
 namespace StarWars.Api.Controllers
 {
     [Route("api/graphql")]
     public class GraphQLController : Controller
     {
+        public IUserRepository UserRepository { get; set; }
+
+        public GraphQLController(IUserRepository userRepository)
+        {
+            UserRepository = userRepository;
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query)
         {

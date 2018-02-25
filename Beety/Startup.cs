@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Beety.App_Config;
 using DataAccess;
 using DataAccess.EntitiesRepositories;
 using DataAccess.EntitiesRepositories.SecurityRepositories;
@@ -23,25 +26,26 @@ namespace Beety
             Configuration = configuration;
         }
 
+        // IContainer instance in the Startup class 
+        public IContainer ApplicationContainer { get; private set; }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connection));
-
             
             services.AddMvc();
 
-            services.AddTransient<UserQuery>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            var container = AutoFacConfig.ConfigureAutoFacContainer(ApplicationContainer, services);
 
+            return container;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
