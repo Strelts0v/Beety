@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Security;
+﻿using Models.Security;
 
 namespace DataAccess.EntitiesRepositories
 {

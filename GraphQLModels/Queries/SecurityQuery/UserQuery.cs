@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using GraphQLModels.Types.SecurityTypes;
 using Models.Security;
 
@@ -9,7 +6,6 @@ namespace GraphQLModels.SecurityQuery
 {
     public class UserQuery: ObjectGraphType
     {
-
         public UserQuery()
         {
             Field<UserType>(

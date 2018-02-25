@@ -11,13 +11,13 @@ namespace DataAccess
     public class ApplicationDbContext : DbContext, IDbContext
     {
         #region DbSets
+
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<RegistrationToken> RegistrationTokens { get; set; }
         #endregion DbSets
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
         }

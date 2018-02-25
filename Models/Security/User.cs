@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Models.Security
 {
     public class User: EntityBase
     {
         [StringLength(30)]
-        public string UserName { get; set; }
+        [Required]
+        
+        public string Login { get; set; }
 
         [StringLength(30)]
         public string FirstName { get; set; }
@@ -18,10 +18,8 @@ namespace Models.Security
 
         public string PasswordSalt { get; set; }
 
-        public string Password { get; set; }
-
         [Required]
-        public virtual RegistrationToken Token { get; set; }
+        public string Password { get; set; }
 
         public DateTime? RegisteredAt { get; set; }
 
@@ -32,6 +30,7 @@ namespace Models.Security
         public int FailedLoginAttemptsCount { get; set; }
 
         [StringLength(255)]
+        [Required]
         public string EmailAddress { get; set; }
     }
 }
