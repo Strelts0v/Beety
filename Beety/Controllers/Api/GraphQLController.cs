@@ -4,21 +4,22 @@ using DataAccess;
 using DataAccess.EntitiesRepositories.SecurityRepositories;
 using GraphQL;
 using GraphQL.Types;
+using DataAccess.EntitiesRepositories;
 using GraphQLModels;
 using GraphQLModels.Mutations;
 using GraphQLModels.SecurityQuery;
-using Microsoft.AspNetCore.Mvc;
+using Models.Security;
 
 namespace Beety.Controllers.Api
 {
     [Route("api/graphql")]
     public class GraphQLController : Controller
     {
-        protected ApplicationDbContext DbContext { get; }
+        public IUserRepository UserRepository { get; set; }
 
-        public GraphQLController(ApplicationDbContext dbContext)
+        public GraphQLController(IUserRepository userRepository)
         {
-            DbContext = dbContext;
+            UserRepository = userRepository;
         }
 
         [HttpPost]
@@ -34,6 +35,11 @@ namespace Beety.Controllers.Api
                 _.Query = queryToExecute;
                 _.Inputs = inputs;
             }).ConfigureAwait(false);
+
+            //if (result.Errors?.Count > 0)
+            //{
+            //    return BadRequest();
+            //}
 
             return Ok(result);
         }
