@@ -1,4 +1,6 @@
-﻿using Common.ValidationHelpers;
+﻿using System.Linq;
+using Common.ValidationHelpers;
+using DataAccess.EntitiesRepositories;
 using GraphQL.Types;
 using GraphQLModels.Types.SecurityTypes;
 using Models.Security;
@@ -7,7 +9,7 @@ namespace GraphQLModels.Mutations
 {
     public class UserMutation : ObjectGraphType
     {
-        public UserMutation(UserValidationHelper userValidationHelper)
+        public UserMutation(IUserRepository userRepository)
         {
             Name = "Mutation";
 
@@ -18,8 +20,14 @@ namespace GraphQLModels.Mutations
                 ),
                 resolve: context =>
                 {
-                    var user = context.GetArgument<User>("user");
-                    userValidationHelper.CreateUser(user);
+                    var user = UserEncryptPasswordHelper.CreateUser(context.GetArgument<User>("user"));
+                    if (userRepository.GetAll().Any(u => u.Login == user.Login))
+                    {
+                        return null;
+                    }
+
+                    userRepository.Add(user);
+                    userRepository.SaveChanges();
                     return user;
                 });
         }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DataAccess.EntitiesRepositories;
@@ -12,7 +9,14 @@ namespace Beety.App_Config
 {
     public class AutoFacConfig
     {
-        public static IServiceProvider ConfigureAutoFac(IContainer applicationContainer, IServiceCollection services)
+        private static IContainer container;
+
+        public static IContainer GetIocContainer()
+        {
+            return container;
+        }
+
+        public static IServiceProvider ConfigureAutoFacContainer(IContainer applicationContainer, IServiceCollection services)
         {
             var builder = new ContainerBuilder();
 
@@ -21,7 +25,9 @@ namespace Beety.App_Config
             RegisterTypes(builder);
 
             applicationContainer = builder.Build();
-           
+
+            container = applicationContainer;
+            
             return new AutofacServiceProvider(applicationContainer);
         }
 

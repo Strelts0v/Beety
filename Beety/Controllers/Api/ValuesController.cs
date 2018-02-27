@@ -19,7 +19,7 @@ namespace Beety.Controllers
         {
             return $"value id";
         }
-
+        
         // POST api/values
         [HttpPost]
         public void Post([FromBody]string value)

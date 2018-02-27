@@ -8,6 +8,9 @@ using DataAccess.EntitiesRepositories;
 using GraphQLModels;
 using GraphQLModels.Mutations;
 using GraphQLModels.SecurityQuery;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.KeyVault.Models;
+using Microsoft.EntityFrameworkCore;
 using Models.Security;
 
 namespace Beety.Controllers.Api
@@ -22,10 +25,10 @@ namespace Beety.Controllers.Api
             UserRepository = userRepository;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] GraphQLQuery query)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateUser([FromBody] GraphQLQuery query)
         {
-            var schema = new Schema { Query = new UserQuery(), Mutation = new UserMutation(new UserValidationHelper(DbContext))};
+            var schema = new Schema { Query = new UserQuery(UserRepository), Mutation = new UserMutation(UserRepository) };
             var inputs = query.Variables.ToInputs();
             var queryToExecute = query.Query;
 
@@ -36,10 +39,29 @@ namespace Beety.Controllers.Api
                 _.Inputs = inputs;
             }).ConfigureAwait(false);
 
-            //if (result.Errors?.Count > 0)
-            //{
-            //    return BadRequest();
-            //}
+            if (result.Errors?.Count > 0)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetUsers([FromBody] GraphQLQuery query)
+        {
+            var schema = new Schema { Query = new UserQuery(UserRepository)};
+            var queryToExecute = query.Query;
+            var result = await new DocumentExecuter().ExecuteAsync(_ =>
+            {
+                _.Schema = schema;
+                _.Query = queryToExecute;
+            }).ConfigureAwait(false);
+
+            if (result.Errors?.Count > 0)
+            {
+                return BadRequest();
+            }
 
             return Ok(result);
         }

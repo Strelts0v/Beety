@@ -7,7 +7,6 @@ namespace Models.Security
     {
         [StringLength(30)]
         [Required]
-        
         public string Login { get; set; }
 
         [StringLength(30)]
