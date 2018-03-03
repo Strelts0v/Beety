@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace DatabaseMigrations.Migrations
+namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180210132635_Initial")]
-    partial class Initial
+    [Migration("20180303131902_InitialDatabase")]
+    partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,34 +20,6 @@ namespace DatabaseMigrations.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Models.Security.RegistrationToken", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("ActivationDate");
-
-                    b.Property<DateTime>("CancellationDate");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<bool>("IsActivated");
-
-                    b.Property<bool>("IsCancelled");
-
-                    b.Property<string>("Token");
-
-                    b.Property<long?>("User")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("User")
-                        .IsUnique();
-
-                    b.ToTable("RegistrationTokens");
-                });
 
             modelBuilder.Entity("Models.Security.Role", b =>
                 {
@@ -70,6 +42,7 @@ namespace DatabaseMigrations.Migrations
                     b.Property<DateTime?>("DeletedAt");
 
                     b.Property<string>("EmailAddress")
+                        .IsRequired()
                         .HasMaxLength(255);
 
                     b.Property<int>("FailedLoginAttemptsCount");
@@ -82,7 +55,14 @@ namespace DatabaseMigrations.Migrations
                     b.Property<string>("LastName")
                         .HasMaxLength(40);
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<string>("MobileNumber");
+
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.Property<string>("PasswordSalt");
 
@@ -90,22 +70,11 @@ namespace DatabaseMigrations.Migrations
 
                     b.Property<long?>("RoleId");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(30);
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Models.Security.RegistrationToken", b =>
-                {
-                    b.HasOne("Models.Security.User", "Client")
-                        .WithOne("Token")
-                        .HasForeignKey("Models.Security.RegistrationToken", "User")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Models.Security.User", b =>

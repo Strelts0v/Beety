@@ -31,5 +31,7 @@ namespace Models.Security
         [StringLength(255)]
         [Required]
         public string EmailAddress { get; set; }
+
+        public string MobileNumber { get; set; }
     }
 }

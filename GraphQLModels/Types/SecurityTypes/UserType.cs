@@ -14,7 +14,7 @@ namespace GraphQLModels.Types.SecurityTypes
             Field(x => x.LastName).Description("The LastName of the User.");
             Field(x => x.EmailAddress).Description("The Email of the User.");
             Field(x => x.Login).Description("The UserName of the User.");
-            //Field(x => x.Password).Description("The Password of the User.");
+            Field(x => x.Password).Description("The Password of the User.");
         }
     }
 }

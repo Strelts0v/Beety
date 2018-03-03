@@ -1,6 +1,11 @@
-﻿using DataAccess.EntitiesRepositories;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Common.ValidationHelpers;
+using DataAccess.EntitiesRepositories;
+using GraphQL.Language.AST;
 using GraphQL.Types;
 using GraphQLModels.Types.SecurityTypes;
+using GraphQLParser.AST;
 using Models.Security;
 
 namespace GraphQLModels.SecurityQuery
@@ -11,13 +16,15 @@ namespace GraphQLModels.SecurityQuery
         {
             Field<UserType>(
                 "user",
-                resolve: context => new User { Id = 10, FirstName = "R2-D2"}
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<UserInputType>> { Name = "id" }
+                ),
+                resolve: context => userRepository.GetById(context.GetArgument<long>("id"))
             );
 
-            Field<UserType>(
+            Field<UsersResultType>(
                 "users",
-                resolve: context => userRepository.GetAll()
-            );
+                resolve: ctx => new Users(){ UsersResult = userRepository.GetAll()});
         }
     }
 }

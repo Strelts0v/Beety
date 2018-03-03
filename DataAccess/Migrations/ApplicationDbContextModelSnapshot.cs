@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace DatabaseMigrations.Migrations
+namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -57,6 +57,8 @@ namespace DatabaseMigrations.Migrations
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(30);
+
+                    b.Property<string>("MobileNumber");
 
                     b.Property<string>("Password")
                         .IsRequired();

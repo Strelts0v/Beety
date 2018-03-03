@@ -7,7 +7,7 @@ namespace GraphQLModels.Types.SecurityTypes
         public UserInputType()
         {
             Name = "UserInput";
-
+            Field<NonNullGraphType<StringGraphType>>("id");
             Field<NonNullGraphType<StringGraphType>>("login");
             Field<NonNullGraphType<StringGraphType>>("password");
             Field<NonNullGraphType<StringGraphType>>("emailAddress");

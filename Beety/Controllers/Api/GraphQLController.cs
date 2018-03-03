@@ -58,10 +58,10 @@ namespace Beety.Controllers.Api
                 _.Query = queryToExecute;
             }).ConfigureAwait(false);
 
-            if (result.Errors?.Count > 0)
-            {
-                return BadRequest();
-            }
+            //if (result.Errors?.Count > 0)
+            //{
+            //    return BadRequest();
+            //}
 
             return Ok(result);
         }
