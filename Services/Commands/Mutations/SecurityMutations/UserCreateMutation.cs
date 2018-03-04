@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using Common.ValidationHelpers;
 using DataAccess.EntitiesRepositories.SecurityRepositories;
@@ -15,7 +16,7 @@ namespace Services.Commands.Mutations.SecurityMutations
         {
             Name = "UserCreate";
 
-            Field<UserCreateDTOType>(
+            Field<UserResultType>(
                 "userCreate",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<UserCreateDTOInputType>> {Name = "user" }
@@ -23,8 +24,9 @@ namespace Services.Commands.Mutations.SecurityMutations
                 resolve: context =>
                 {
                     var userDto = context.GetArgument<UserDTO>("user");
-                    var user = Mapper.Map<User>(userDto);
+                    var user = UserEncryptPasswordHelper.CreateUser(Mapper.Map<User>(userDto));
                     user.Role = roleRepository.Get(x => x.RoleType == userDto.Role).First();
+                    user.RegisteredAt = DateTime.UtcNow;
 
                     if (!ValidationUserHelper.IsUserValid(user)) return null;
                     if (userRepository.GetAll().Any(u => u.Login == user.Login))

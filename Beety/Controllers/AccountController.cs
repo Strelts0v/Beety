@@ -21,37 +21,37 @@ namespace Beety.Controllers
         [HttpPost("/token")]
         public async Task Token()
         {
-            var username = Request.Form["username"];
-            var password = Request.Form["password"];
+            //var username = Request.Form["username"];
+            //var password = Request.Form["password"];
 
-            var identity = GetIdentity(username, password);
-            if (identity == null)
-            {
-                Response.StatusCode = 400;
-                await Response.WriteAsync("Invalid username or password.");
-                return;
-            }
+            //var identity = GetIdentity(username, password);
+            //if (identity == null)
+            //{
+            //    Response.StatusCode = 400;
+            //    await Response.WriteAsync("Invalid username or password.");
+            //    return;
+            //}
 
-            var now = DateTime.UtcNow;
-            // создаем JWT-токен
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            //var now = DateTime.UtcNow;
+            //// создаем JWT-токен
+            //var jwt = new JwtSecurityToken(
+            //        issuer: AuthOptions.ISSUER,
+            //        audience: AuthOptions.AUDIENCE,
+            //        notBefore: now,
+            //        claims: identity.Claims,
+            //        expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+            //        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            //var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var response = new
-            {
-                access_token = encodedJwt,
-                username = identity.Name
-            };
+            //var response = new
+            //{
+            //    access_token = encodedJwt,
+            //    username = identity.Name
+            //};
 
-            // сериализация ответа
-            Response.ContentType = "application/json";
-            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+            //// сериализация ответа
+            //Response.ContentType = "application/json";
+            //await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
         private ClaimsIdentity GetIdentity(string username, string password)

@@ -36,6 +36,6 @@ namespace Models.Security
         public string MobileNumber { get; set; }
 
         [Required]
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
     }
 }

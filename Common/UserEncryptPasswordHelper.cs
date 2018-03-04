@@ -13,7 +13,7 @@ namespace Common.ValidationHelpers
             return user;
         }
 
-        public static string ComputeHash(string input, HashAlgorithm algorithm)
+        private static string ComputeHash(string input, HashAlgorithm algorithm)
         {
             var inputBytes = Encoding.UTF8.GetBytes(input);
             var hashedBytes = algorithm.ComputeHash(inputBytes);

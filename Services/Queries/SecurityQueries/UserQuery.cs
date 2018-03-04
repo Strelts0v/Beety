@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using DataAccess.EntitiesRepositories.SecurityRepositories;
 using GraphQL.Types;
@@ -11,21 +12,24 @@ namespace Services.Queries.SecurityQueries
     {
         public UserQuery(IUserRepository userRepository)
         {
-            Field<UserCreateDTOType>(
+            Field<UserResultType>(
                 "user",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<UserCreateDTOInputType>> { Name = "id" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id" }
                 ),
-                resolve: context => userRepository.GetById(context.GetArgument<long>("id"))
-            );
+                resolve: context =>
+                {
+                    var id = context.GetArgument<long>("id");
+                    return userRepository.Get(x => x.Id == id, "Role").First();
+                });
 
             Field<UsersResultType>(
                 "users",
                 resolve: ctx =>
                 {
                     var users = userRepository.GetAll();
-                    var usersDTO = Mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
-                    return new Users() { UsersResult = usersDTO };
+                    var usersDto = Mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
+                    return new Users() { UsersResult = usersDto };
                 });
         }
     }

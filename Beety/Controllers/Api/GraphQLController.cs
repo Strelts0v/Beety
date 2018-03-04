@@ -54,6 +54,7 @@ namespace Beety.Controllers.Api
             {
                 _.Schema = schema;
                 _.Query = queryToExecute;
+                _.Inputs = query.Variables.ToInputs();
             }).ConfigureAwait(false);
         
 
