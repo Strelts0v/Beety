@@ -11,9 +11,10 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180304095524_AddedRoleInUser")]
+    partial class AddedRoleInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,8 +28,6 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("RoleName")
                         .HasMaxLength(255);
-
-                    b.Property<int>("RoleType");
 
                     b.HasKey("Id");
 
@@ -60,8 +59,7 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<string>("MobileNumber")
-                        .IsRequired();
+                    b.Property<string>("MobileNumber");
 
                     b.Property<string>("Password")
                         .IsRequired();
@@ -70,7 +68,7 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime?>("RegisteredAt");
 
-                    b.Property<long>("RoleId");
+                    b.Property<long?>("RoleId");
 
                     b.HasKey("Id");
 
@@ -83,8 +81,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Models.Security.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618
         }

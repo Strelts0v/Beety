@@ -34,6 +34,7 @@ namespace Beety.App_Config
         public static void RegisterTypes(ContainerBuilder builder)
         {
             builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<RoleRepository>().As<IRoleRepository>();
         }
     }
 }

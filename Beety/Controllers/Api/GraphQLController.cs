@@ -1,17 +1,13 @@
 ﻿using System.Threading.Tasks;
-using Common.ValidationHelpers;
-using DataAccess;
-using DataAccess.EntitiesRepositories.SecurityRepositories;
+using AutoMapper;
 using GraphQL;
 using GraphQL.Types;
 using DataAccess.EntitiesRepositories;
-using GraphQLModels;
-using GraphQLModels.Mutations;
-using GraphQLModels.SecurityQuery;
+using DataAccess.EntitiesRepositories.SecurityRepositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.KeyVault.Models;
-using Microsoft.EntityFrameworkCore;
-using Models.Security;
+using Services.Commands.Mutations.SecurityMutations;
+using Services.Queries;
+using Services.Queries.SecurityQueries;
 
 namespace Beety.Controllers.Api
 {
@@ -19,16 +15,18 @@ namespace Beety.Controllers.Api
     public class GraphQLController : Controller
     {
         public IUserRepository UserRepository { get; set; }
+        public IRoleRepository RoleRepository { get; set; }
 
-        public GraphQLController(IUserRepository userRepository)
+        public GraphQLController(IUserRepository userRepository, IRoleRepository roleRepository)
         {
             UserRepository = userRepository;
+            RoleRepository = roleRepository;
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateUser([FromBody] GraphQLQuery query)
         {
-            var schema = new Schema { Query = new UserQuery(UserRepository), Mutation = new UserMutation(UserRepository) };
+            var schema = new Schema { Mutation = new UserCreateMutation(UserRepository, RoleRepository) };
             var inputs = query.Variables.ToInputs();
             var queryToExecute = query.Query;
 
@@ -39,10 +37,10 @@ namespace Beety.Controllers.Api
                 _.Inputs = inputs;
             }).ConfigureAwait(false);
 
-            if (result.Errors?.Count > 0)
-            {
-                return BadRequest();
-            }
+            //if (result.Errors?.Count > 0)
+            //{
+            //    return BadRequest();
+            //}
 
             return Ok(result);
         }
@@ -57,6 +55,7 @@ namespace Beety.Controllers.Api
                 _.Schema = schema;
                 _.Query = queryToExecute;
             }).ConfigureAwait(false);
+        
 
             //if (result.Errors?.Count > 0)
             //{

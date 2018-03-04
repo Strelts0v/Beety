@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DatabaseMigrations
+namespace DataAccess
 {
     public interface IDbContext : IDisposable
     {

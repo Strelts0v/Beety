@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Beety.App_Config;
 using DataAccess;
-using DataAccess.EntitiesRepositories;
-using DataAccess.EntitiesRepositories.SecurityRepositories;
-using GraphQLModels.Mutations;
-using GraphQLModels.SecurityQuery;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Beety
 {
@@ -33,14 +27,14 @@ namespace Beety
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var connection = Configuration.GetConnectionString("DefaultConnection");
+            AutoMapperConfig.Configure();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connection));
-            
-            services.AddMvc();
 
+            services.AddMvc();
+            
             var container = AutoFacConfig.ConfigureAutoFacContainer(ApplicationContainer, services);
-            services.AddTransient<UserMutation>();
             return container;
         }
 
@@ -50,7 +44,7 @@ namespace Beety
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseMvc();
         }
     }

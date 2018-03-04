@@ -3,9 +3,9 @@ using Models.Security;
 
 namespace GraphQLModels.Types.SecurityTypes
 {
-    public class UserType: ObjectGraphType<User>
+    public class UserCreateDTOType: ObjectGraphType<UserDTO>
     {
-        public UserType()
+        public UserCreateDTOType()
         {
             Name = "User";
 
@@ -15,6 +15,8 @@ namespace GraphQLModels.Types.SecurityTypes
             Field(x => x.EmailAddress).Description("The Email of the User.");
             Field(x => x.Login).Description("The UserName of the User.");
             Field(x => x.Password).Description("The Password of the User.");
+            Field(x => x.MobileNumber).Description("The MobileNumber of the User.");
+            Field(x => x.Role).Description("The Role of the User.");
         }
     }
 }

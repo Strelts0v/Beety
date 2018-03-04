@@ -5,12 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Queries\RoleQuery\**" />
-    <EmbeddedResource Remove="Queries\RoleQuery\**" />
-    <None Remove="Queries\RoleQuery\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="GraphQL" Version="0.17.3" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
   </ItemGroup>

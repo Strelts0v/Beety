@@ -32,6 +32,10 @@ namespace Models.Security
         [Required]
         public string EmailAddress { get; set; }
 
+        [Required]
         public string MobileNumber { get; set; }
+
+        [Required]
+        public Role Role { get; set; }
     }
 }

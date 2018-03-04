@@ -1,6 +1,6 @@
 ﻿using Models.Security;
 
-namespace DataAccess.EntitiesRepositories
+namespace DataAccess.EntitiesRepositories.SecurityRepositories
 {
     public interface IUserRepository : IRepository<User>
     {
