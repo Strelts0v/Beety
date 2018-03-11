@@ -4,14 +4,13 @@ using Common.ValidationHelpers;
 using DataAccess.EntitiesRepositories.SecurityRepositories;
 using GraphQL.Types;
 using GraphQLModels.Types.SecurityTypes;
-using Microsoft.AspNetCore.Routing.Tree;
 using Models.Security;
 
 namespace Services.Commands.Mutations.SecurityMutations
 {
     public class UserCreateMutation : ObjectGraphType
     {
-        public UserCreateMutation(IUserRepository userRepository, IRoleRepository roleRepository)
+        public UserCreateMutation(IUserRepository userRepository, IRoleRepository roleRepository, ISecurityService securityService)
         {
             Name = "UserCreate";
 
@@ -24,16 +23,20 @@ namespace Services.Commands.Mutations.SecurityMutations
                 {
                     var userDto = context.GetArgument<UserDTO>("user");
                     var user = Mapper.Map<User>(userDto);
-                    user.Role = roleRepository.Get(x => x.RoleType == userDto.Role).First();
 
                     if (!ValidationUserHelper.IsUserValid(user)) return null;
                     if (userRepository.GetAll().Any(u => u.Login == user.Login))
                     {
                         return null;
                     }
-                    
+
+                    user.Password = securityService.GetSha256Hash(user.Password);
+                    var role = roleRepository.Get(x => x.Name == userDto.Role).SingleOrDefault();
+
                     userRepository.Add(user);
                     userRepository.SaveChanges();
+                    roleRepository.AddUserRole(user, role);
+                    roleRepository.SaveChanges();
                     return user;
                 });
         }

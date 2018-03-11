@@ -7,9 +7,6 @@ namespace Beety.AutoMappers
     {
         public UserMapper()
         {
-            CreateMap<UserDTO, User>()
-                .ForMember(x => x.Role, m => m.Ignore());
-
             CreateMap<User, UserDTO>().ForMember(x => x.Password, m => m.Ignore());
         }
     }

@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using GraphQL;
 using GraphQL.Types;
-using DataAccess.EntitiesRepositories;
 using DataAccess.EntitiesRepositories.SecurityRepositories;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 using Services.Commands.Mutations.SecurityMutations;
 using Services.Queries;
 using Services.Queries.SecurityQueries;
@@ -16,17 +15,19 @@ namespace Beety.Controllers.Api
     {
         public IUserRepository UserRepository { get; set; }
         public IRoleRepository RoleRepository { get; set; }
+        public ISecurityService SecurityService { get; set; }
 
-        public GraphQLController(IUserRepository userRepository, IRoleRepository roleRepository)
+        public GraphQLController(IUserRepository userRepository, IRoleRepository roleRepository, ISecurityService securityService)
         {
             UserRepository = userRepository;
             RoleRepository = roleRepository;
+            SecurityService = securityService;
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateUser([FromBody] GraphQLQuery query)
         {
-            var schema = new Schema { Mutation = new UserCreateMutation(UserRepository, RoleRepository) };
+            var schema = new Schema { Mutation = new UserCreateMutation(UserRepository, RoleRepository, SecurityService) };
             var inputs = query.Variables.ToInputs();
             var queryToExecute = query.Query;
 

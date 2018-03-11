@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.Security
+﻿namespace Models.Security
 {
     public class UserDTO: EntityBase
     {
@@ -18,6 +14,6 @@ namespace Models.Security
 
         public string MobileNumber { get; set; }
 
-        public int Role { get; set; }
+        public string Role { get; set; }
     }
 }

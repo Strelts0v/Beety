@@ -16,7 +16,7 @@ namespace DataAccess
             DbContext = context;
         }
 
-        public virtual TEntity GetById(long id)
+        public virtual TEntity GetById(int id)
         {
             return DbContext.Set<TEntity>().Find(id);
         }

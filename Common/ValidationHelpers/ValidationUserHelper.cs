@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Security;
-using Models.Security.Enums;
+﻿using Models.Security;
 
 namespace Common.ValidationHelpers
 {
@@ -10,12 +6,11 @@ namespace Common.ValidationHelpers
     {
         public static bool IsUserValid(User user)
         {
-            if (user.Login == String.Empty) return false;
-            if (user.EmailAddress == String.Empty ) return false;
-            if (user.MobileNumber == String.Empty) return false;
-            if (user.Password == String.Empty) return false;
-            if (user.EmailAddress == String.Empty) return false;
-            if (user.Role == null || (RoleType) user.Role.RoleType == RoleType.Admin) return false;
+            if (user.Login == string.Empty) return false;
+            if (user.EmailAddress == string.Empty ) return false;
+            if (user.MobileNumber == string.Empty) return false;
+            if (user.Password == string.Empty) return false;
+            if (user.EmailAddress == string.Empty) return false;
             return true;
         }
     }

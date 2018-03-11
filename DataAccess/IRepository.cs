@@ -7,18 +7,12 @@ namespace DataAccess
 {
     public interface IRepository<TEntity> where TEntity : EntityBase
     {
-        TEntity GetById(long id);
-
+        TEntity GetById(int id);
         IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> query, params string[] includes);
-
         IEnumerable<TEntity> GetAll(params string[] includes);
-
         void Add(TEntity entity);
-
         void Update(TEntity entity);
-
         void Delete(TEntity entity);
-
         void SaveChanges();
     }
 }

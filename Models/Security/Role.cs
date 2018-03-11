@@ -5,11 +5,14 @@ namespace Models.Security
 {
     public class Role : EntityBase
     {
+        public Role()
+        {
+            UserRoles = new HashSet<UserRole>();
+        }
+
         [StringLength(255)]
-        public string RoleName { get; set; }
+        public string Name { get; set; }
 
-        public virtual IList<User> Users { get; set; }
-
-        public int RoleType { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

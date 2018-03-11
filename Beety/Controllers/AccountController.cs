@@ -1,77 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using DataAccess.EntitiesRepositories;
-using DataAccess.EntitiesRepositories.SecurityRepositories;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Models.Security;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Services;
 
 namespace Beety.Controllers
 {
+    [Route("api/[controller]")]
+    [EnableCors("CorsPolicy")]
     public class AccountController : Controller
     {
-        public IUserRepository UserRepository { get; set; }
+        private readonly IUsersService _usersService;
+        private readonly ITokenStoreService _tokenStoreService;
 
-        [HttpPost("/token")]
-        public async Task Token()
+        public AccountController(
+            IUsersService usersService,
+            ITokenStoreService tokenStoreService)
         {
-            var username = Request.Form["username"];
-            var password = Request.Form["password"];
-
-            var identity = GetIdentity(username, password);
-            if (identity == null)
-            {
-                Response.StatusCode = 400;
-                await Response.WriteAsync("Invalid username or password.");
-                return;
-            }
-
-            var now = DateTime.UtcNow;
-            // создаем JWT-токен
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
-            {
-                access_token = encodedJwt,
-                username = identity.Name
-            };
-
-            // сериализация ответа
-            Response.ContentType = "application/json";
-            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+            _usersService = usersService;
+            _tokenStoreService = tokenStoreService;
         }
 
-        private ClaimsIdentity GetIdentity(string username, string password)
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public IActionResult Login([FromBody]  User loginUser)
         {
-            User person = UserRepository.GetAll().FirstOrDefault(x => x.Login == username && x.Password == password);
-            if (person != null)
+            if (loginUser == null)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, person.Login),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, person.Role.RoleName)
-                };
-                ClaimsIdentity claimsIdentity =
-                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
+                return BadRequest("user is not set.");
             }
 
-            // если пользователя не найдено
-            return null;
+            var user = _usersService.FindUser(loginUser.Login, loginUser.Password);
+            if (user == null || !user.IsActive)
+            {
+                return Unauthorized();
+            }
+
+            var accessToken = _tokenStoreService.CreateJwtTokens(user, null);
+            return Ok(new { access_token = accessToken});
+        }
+
+        [HttpGet("[action]")]
+        [Authorize(Policy = CustomRoles.Admin)]
+        public IActionResult Get()
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            var userDataClaim = claimsIdentity.FindFirst(ClaimTypes.UserData);
+            var userId = userDataClaim.Value;
+
+            return Ok(new
+            {
+                Id = 1,
+                Title = "Hello from My Protected Admin Api Controller! [Authorize(Policy = CustomRoles.Admin)]",
+                Username = User.Identity.Name,
+                UserData = userId,
+                Roles = claimsIdentity.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList()
+            });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public IActionResult RefreshToken([FromBody]JToken jsonBody)
+        {
+            var refreshToken = jsonBody.Value<string>("refreshToken");
+            if (string.IsNullOrWhiteSpace(refreshToken))
+            {
+                return BadRequest("refreshToken is not set.");
+            }
+
+            var token = _tokenStoreService.FindToken(refreshToken);
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+
+            var accessToken = _tokenStoreService.CreateJwtTokens(token.User, refreshToken);
+            return Ok(new { access_token = accessToken});
+        }
+
+        [AllowAnonymous]
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public bool Logout([FromBody]JToken jsonBody)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var userIdValue = claimsIdentity?.FindFirst(ClaimTypes.UserData)?.Value;
+            var refreshToken = jsonBody.Value<string>("refreshToken");
+
+            // The Jwt implementation does not support "revoke OAuth token" (logout) by design.
+            // Delete the user's tokens from the database (revoke its bearer token)
+            _tokenStoreService.RevokeUserBearerTokens(userIdValue, refreshToken);
+
+            return true;
         }
     }
 }

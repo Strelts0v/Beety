@@ -11,8 +11,8 @@ using System;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180304123418_AddedRoleType")]
-    partial class AddedRoleType
+    [Migration("20180310095544_authorization")]
+    partial class authorization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,13 +23,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Security.Role", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("RoleName")
+                    b.Property<string>("Name")
                         .HasMaxLength(255);
-
-                    b.Property<int>("RoleType");
 
                     b.HasKey("Id");
 
@@ -38,10 +36,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Security.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("DeletedAt");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -52,7 +48,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("FirstName")
                         .HasMaxLength(30);
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool>("IsActive");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(40);
@@ -67,24 +63,70 @@ namespace DataAccess.Migrations
                     b.Property<string>("Password")
                         .IsRequired();
 
-                    b.Property<string>("PasswordSalt");
-
                     b.Property<DateTime?>("RegisteredAt");
 
-                    b.Property<long>("RoleId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Models.Security.User", b =>
+            modelBuilder.Entity("Models.Security.UserRole", b =>
+                {
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("Models.Security.UserToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("AccessTokenExpiresDateTime");
+
+                    b.Property<string>("AccessTokenHash");
+
+                    b.Property<DateTimeOffset>("RefreshTokenExpiresDateTime");
+
+                    b.Property<string>("RefreshTokenIdHash");
+
+                    b.Property<string>("RefreshTokenIdHashSource");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("Models.Security.UserRole", b =>
                 {
                     b.HasOne("Models.Security.Role", "Role")
-                        .WithMany("Users")
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Models.Security.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Models.Security.UserToken", b =>
+                {
+                    b.HasOne("Models.Security.User", "User")
+                        .WithMany("UserTokens")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

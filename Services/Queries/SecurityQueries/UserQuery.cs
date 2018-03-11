@@ -16,7 +16,7 @@ namespace Services.Queries.SecurityQueries
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<UserCreateDTOInputType>> { Name = "id" }
                 ),
-                resolve: context => userRepository.GetById(context.GetArgument<long>("id"))
+                resolve: context => userRepository.GetById(context.GetArgument<int>("id"))
             );
 
             Field<UsersResultType>(
@@ -24,8 +24,8 @@ namespace Services.Queries.SecurityQueries
                 resolve: ctx =>
                 {
                     var users = userRepository.GetAll();
-                    var usersDTO = Mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
-                    return new Users() { UsersResult = usersDTO };
+                    var usersDto = Mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
+                    return new Users { UsersResult = usersDto };
                 });
         }
     }
