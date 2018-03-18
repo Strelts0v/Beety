@@ -54,7 +54,7 @@ namespace Services
 
                     if (!context.Roles.Any())
                     {
-                        context.Add(allRoles);
+                        context.AddRange(allRoles);
                         context.SaveChanges();
                     }
 

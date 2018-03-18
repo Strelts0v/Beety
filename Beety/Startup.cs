@@ -104,6 +104,7 @@ namespace Beety
             });
 
             services.AddMvc();
+            AutoMapperConfig.Configure();
             var container = AutoFacConfig.ConfigureAutoFacContainer(ApplicationContainer, services);
             return container;
         }

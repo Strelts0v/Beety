@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Services;
 
 namespace Beety.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [EnableCors("CorsPolicy")]
     public class AccountController : Controller
     {
@@ -24,9 +25,14 @@ namespace Beety.Controllers
             _tokenStoreService = tokenStoreService;
         }
 
+        public IActionResult Login()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
-        [HttpPost("[action]")]
-        public IActionResult Login([FromBody]  User loginUser)
+        [HttpPost]
+        public ActionResult Login(UserDTO loginUser)
         {
             if (loginUser == null)
             {
@@ -40,7 +46,7 @@ namespace Beety.Controllers
             }
 
             var accessToken = _tokenStoreService.CreateJwtTokens(user, null);
-            return Ok(new { access_token = accessToken});
+            return Ok(new { access_token = accessToken });
         }
 
         [HttpGet("[action]")]

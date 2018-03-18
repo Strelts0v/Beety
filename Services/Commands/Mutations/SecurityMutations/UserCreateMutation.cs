@@ -31,6 +31,7 @@ namespace Services.Commands.Mutations.SecurityMutations
                     }
 
                     user.Password = securityService.GetSha256Hash(user.Password);
+                    user.IsActive = true;
                     var role = roleRepository.Get(x => x.Name == userDto.Role).SingleOrDefault();
 
                     userRepository.Add(user);
