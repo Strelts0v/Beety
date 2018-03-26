@@ -16,6 +16,7 @@ namespace DataAccess
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Privator> Privators { get; set; }
         public DbSet<Redactor> Redactors { get; set; }
+        public DbSet<OrganizationMaterial> OrganizationMaterials { get; set; }
 
         public DbSet<RegistrationToken> RegistrationTokens { get; set; }
         #endregion DbSets
