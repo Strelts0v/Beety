@@ -7,39 +7,35 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class ConsumablesValidatorService implements ValidatorService {
   getRowValidator(): FormGroup {
     return new FormGroup({
-      'name': new FormControl(null, Validators.required),
-      'value': new FormControl(),
-      'count': new FormControl(),
+      'startTime': new FormControl(null, Validators.required),
+      'endTime': new FormControl(),
     });
   }
 }
 
 
 class Consumables {
-  name: string;
-  value: number;
-  count: number;
+  startTime: string;
+  endTime: string;
 }
 
 @Component({
-  selector: 't-table-material',
-  styleUrls: ['table-material.component.scss'],
-  templateUrl: 'table-material.component.html',
+  selector: 't-schedule',
+  styleUrls: ['schedule.component.scss'],
+  templateUrl: 'schedule.component.html',
   providers: [
     {provide: ValidatorService, useClass: ConsumablesValidatorService }
   ],
 })
-export class TableMaterialComponent {
+export class ScheduleComponent {
 
-  constructor(private personValidator: ValidatorService) { }
+  constructor(private personValidator: ValidatorService, public dialog: MatDialog) { }
 
-  displayedColumns = ['name', 'value', 'count', 'actionsColumn'];
+  displayedColumns = ['startTime', 'endTime', 'actionsColumn'];
 
   @Input() personList = [
-    { name: 'Scissors standard', value: 5.55, count: 6 },
-    { name: 'Thinning scissors', value: 6.55, count: 6 },
-    { name: 'Shearer', value: 15.99, count: 3 },
-    { name: 'Something for beauty', value: 99.99, count: 1}
+    { startTime: '8:00', endTime: '13:00' },
+    { startTime: '8:00', endTime: '14:00' },
   ] ;
   @Output() personListChange = new EventEmitter<Consumables[]>();
 
@@ -63,17 +59,17 @@ export class TableMaterialComponent {
 
 
 @Component({
-  selector: 't-table-material-button',
-  styleUrls: ['table-material-button.component.scss'],
-  templateUrl: './table-material-button.component.html',
-  entryComponents: [ TableMaterialComponent]
+  selector: 't-schedule-button',
+  styleUrls: ['schedule-button.component.scss'],
+  templateUrl: './schedule-button.component.html',
+  entryComponents: [ ScheduleComponent]
 })
 
-export class TableMaterialButtonComponent {
+export class ScheduleButtonComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog() {
-    this.dialog.open(TableMaterialComponent, {
+    this.dialog.open(ScheduleComponent, {
       data: {
         animal: 'panda'
       },

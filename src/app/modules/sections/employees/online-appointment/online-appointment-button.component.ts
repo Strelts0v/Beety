@@ -2,14 +2,13 @@ import {Component, Input, Output, Injectable, EventEmitter} from '@angular/core'
 import {MatDialog} from '@angular/material';
 import { TableDataSource, ValidatorService } from 'angular4-material-table';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DemoComponent } from './calendar/calendar-appointment.component';
 
 @Injectable()
 export class ConsumablesValidatorService implements ValidatorService {
   getRowValidator(): FormGroup {
     return new FormGroup({
-      'name': new FormControl(null, Validators.required),
-      'value': new FormControl(),
-      'count': new FormControl(),
+      'name': new FormControl(null, Validators.required)
     });
   }
 }
@@ -17,29 +16,26 @@ export class ConsumablesValidatorService implements ValidatorService {
 
 class Consumables {
   name: string;
-  value: number;
-  count: number;
 }
 
 @Component({
-  selector: 't-table-material',
-  styleUrls: ['table-material.component.scss'],
-  templateUrl: 'table-material.component.html',
+  selector: 't-online-appointment',
+  styleUrls: ['online-appointment.component.scss'],
+  templateUrl: 'online-appointment.component.html',
   providers: [
     {provide: ValidatorService, useClass: ConsumablesValidatorService }
   ],
 })
-export class TableMaterialComponent {
+export class OnlineAppointmentComponent {
 
-  constructor(private personValidator: ValidatorService) { }
+  constructor(private personValidator: ValidatorService, public dialog: MatDialog) { }
 
-  displayedColumns = ['name', 'value', 'count', 'actionsColumn'];
+  displayedColumns = ['name', 'actionsColumn'];
 
   @Input() personList = [
-    { name: 'Scissors standard', value: 5.55, count: 6 },
-    { name: 'Thinning scissors', value: 6.55, count: 6 },
-    { name: 'Shearer', value: 15.99, count: 3 },
-    { name: 'Something for beauty', value: 99.99, count: 1}
+    { name: 'Pastushenko Serioga'},
+    { name: 'Help Me'},
+    { name: 'Mr Jon'}
   ] ;
   @Output() personListChange = new EventEmitter<Consumables[]>();
 
@@ -59,24 +55,35 @@ export class TableMaterialComponent {
 
     this.dataSource.datasourceSubject.subscribe(personList => this.personListChange.emit(personList));
   }
+  calendarShow(name) {
+    this.dialog.open(DemoComponent, {
+      data: {
+        name: name
+      },
+      minWidth: '50%',
+      height: '100%',
+      position: { top: '0%', left: '400px' }
+    });
+  }
 }
 
 
 @Component({
-  selector: 't-table-material-button',
-  styleUrls: ['table-material-button.component.scss'],
-  templateUrl: './table-material-button.component.html',
-  entryComponents: [ TableMaterialComponent]
+  selector: 't-online-appointment-button',
+  styleUrls: ['online-appointment-button.component.scss'],
+  templateUrl: './online-appointment-button.component.html',
+  entryComponents: [ OnlineAppointmentComponent]
 })
 
-export class TableMaterialButtonComponent {
+export class OnlineAppointmentButtonComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog() {
-    this.dialog.open(TableMaterialComponent, {
+    this.dialog.open(OnlineAppointmentComponent, {
       data: {
         animal: 'panda'
       },
+      width: '400px',
       height:'100%',
       position: {top: '0%', left: '0%'}
     });

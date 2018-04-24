@@ -1,0 +1,15 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 1000px;
+}
+
+.mat-input-element{
+  max-width: 95%;
+  text-overflow: ellipsis;
+}

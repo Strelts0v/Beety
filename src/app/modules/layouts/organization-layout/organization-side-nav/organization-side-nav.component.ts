@@ -18,7 +18,6 @@ export class OrganizationSideNavComponent {
     new MenuItem('Финансы', ['/', States.ORGANIZATION, States.FINANCE], 'attach_money'),
     new MenuItem('Расчет зарплат', ['/', States.ORGANIZATION, States.CALCULATION_OF_SALARIES], 'credit_card'),
     new MenuItem('Складской учет', ['/', States.ORGANIZATION, States.STORAGE], 'storage'),
-    new MenuItem('Онлайн запись', ['/', States.ORGANIZATION, States.ONLINE_APPOINTMENT], 'language'),
   ];
 
   constructor(private sideNavService: SideNavService) {

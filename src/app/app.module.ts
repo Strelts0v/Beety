@@ -6,6 +6,14 @@ import { GuardsModule } from './guards/guards.module';
 import { ServicesModule } from './services/services.module';
 import { InterceptorsModule } from './services/interceptor/interceptors.module';
 import { MaterialModule } from './modules/shared/material.module';
+import { MatDialogModule } from '@angular/material';
+import { TableMaterialButtonModule} from "./modules/sections/table-material/table-material-button.module";
+import { OnlineAppointmentButtonModule} from "./modules/sections/employees/online-appointment/online-appointment-button.module";
+import { DemoModule } from './modules/sections/employees/online-appointment/calendar/calendar-appointment.module';
+import { DemoUtilsModule } from './modules/sections/employees/online-appointment/calendar/demo-utils/demo-utils.module';
+import { CalendarModule } from 'angular-calendar';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { ScheduleButtonModule } from './modules/sections/employees/online-appointment/calendar/schedule/schedule-button.module';
 
 import 'hammerjs';
 import 'rxjs/add/operator/do';
@@ -21,7 +29,7 @@ import 'rxjs/add/observable/forkJoin';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     GuardsModule,
@@ -30,6 +38,14 @@ import 'rxjs/add/observable/forkJoin';
     InterceptorsModule,
     BrowserAnimationsModule,
     MaterialModule,
+    MatDialogModule,
+    TableMaterialButtonModule,
+    OnlineAppointmentButtonModule,
+    DemoModule,
+    DemoUtilsModule,
+    NgbModalModule.forRoot(),
+    CalendarModule.forRoot(),
+    ScheduleButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

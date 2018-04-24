@@ -1,0 +1,40 @@
+<h3>Расписание</h3>
+<mat-table class="table-margin-bottom" #table [dataSource]="dataSource" title="Schedule">
+  <ng-container matColumnDef="startTime">
+    <mat-header-cell *matHeaderCellDef> Start Time </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never'}}">
+        <input matInput [formControl]="row.validator.controls['startTime']" type="time" placeholder="Start Time" [(ngModel)]="row.currentData.startTime">
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="endTime">
+    <mat-header-cell *matHeaderCellDef> End Time </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-form-field floatPlaceholder="{{ row.editing ? 'float' : 'never'}}">
+        <input matInput [formControl]="row.validator.controls['endTime']" type="time" placeholder="End Time" [(ngModel)]="row.currentData.endTime">
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actionsColumn">
+    <mat-header-cell *matHeaderCellDef>
+      <button mat-icon-button color="accent" (click)="dataSource.createNew()">
+       <mat-icon>plus_one</mat-icon>
+      </button>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+        <mat-icon>build</mat-icon>
+      </button>
+      <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+        <mat-icon>check</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" focusable="false" (click)="row.cancelOrDelete()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
