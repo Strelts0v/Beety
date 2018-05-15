@@ -5,6 +5,7 @@ import { States } from '../../../constant/states.constant';
 import { ConfigurationMainLayoutComponent } from './organization-layout.component';
 import { EmployeesModule } from '../../sections/employees/employees.module';
 import { ClientsModule } from '../../sections/clients/clients.module';
+import { FinancialAccountingModule } from '../../sections/financial-accounting/financial-accounting.module';
 
 const configurationMainLayoutRoutes: Routes = [
   {
@@ -18,6 +19,14 @@ const configurationMainLayoutRoutes: Routes = [
       {
         path: States.CLIENTS,
         loadChildren: '../../sections/clients/clients.module#ClientsModule',
+      },
+      {
+        path: States.FINANCE,
+        loadChildren: '../../sections/financial-accounting/financial-accounting.module#FinancialAccountingModule',
+      },
+      {
+        path: States.ANALYTICS,
+        loadChildren: '../../sections/analytics/financial-accounting.module#FinancialAccountingModule',
       }
     ]
   }
@@ -29,6 +38,6 @@ const configurationMainLayoutRoutes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class OrganizationLayoutRoutingModule {
 
+export class OrganizationLayoutRoutingModule {
 }

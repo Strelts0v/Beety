@@ -14,7 +14,7 @@ export class OrganizationSideNavComponent {
     new MenuItem('Сотрудники', ['/', States.ORGANIZATION, States.EMPLOYEES], 'person'),
     new MenuItem('Клиенты', ['/', States.ORGANIZATION, States.CLIENTS], 'people'),
     new MenuItem('Обзор', ['/', States.ORGANIZATION, States.OVERVIEW], 'view_module'),
-    new MenuItem('Аналитика', ['/', States.ORGANIZATION, States.ANALYTICS], 'show_chart'),
+    new MenuItem('Контакты', ['/', States.ORGANIZATION, States.ANALYTICS], 'show_chart'),
     new MenuItem('Финансы', ['/', States.ORGANIZATION, States.FINANCE], 'attach_money'),
     new MenuItem('Расчет зарплат', ['/', States.ORGANIZATION, States.CALCULATION_OF_SALARIES], 'credit_card'),
     new MenuItem('Складской учет', ['/', States.ORGANIZATION, States.STORAGE], 'storage'),

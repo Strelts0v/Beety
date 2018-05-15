@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: EmployeesComponent,
-    data: {title: 'Employees'}
+    data: {title: 'Сотрудники'}
   }
 ];
 
