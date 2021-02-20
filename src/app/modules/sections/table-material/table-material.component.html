@@ -32,7 +32,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
       <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
-        <mat-icon>build</mat-icon>
+        <mat-icon>edit</mat-icon>
       </button>
       <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
         <mat-icon>check</mat-icon>
